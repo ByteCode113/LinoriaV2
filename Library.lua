@@ -1,3 +1,5 @@
+if getgenv().Library and getgenv().Library.Unload then pcall(getgenv().Library.Unload, getgenv().Library) end
+
 local InputService = game:GetService('UserInputService');
 local TextService = game:GetService('TextService');
 local CoreGui = game:GetService('CoreGui');
@@ -2554,17 +2556,15 @@ do
             end;
         end);
 
-        InputService.InputBegan:Connect(function(Input)
+        Library:GiveSignal(InputService.InputBegan:Connect(function(Input)
             if Input.UserInputType == Enum.UserInputType.MouseButton1 then
                 local AbsPos, AbsSize = ListOuter.AbsolutePosition, ListOuter.AbsoluteSize;
-
                 if Mouse.X < AbsPos.X or Mouse.X > AbsPos.X + AbsSize.X
                     or Mouse.Y < (AbsPos.Y - 20 - 1) or Mouse.Y > AbsPos.Y + AbsSize.Y then
-
                     Dropdown:CloseDropdown();
                 end;
-            end;
-        end);
+             end;
+        end))
 
         Dropdown:BuildDropdownList();
         Dropdown:Display();
@@ -3660,8 +3660,8 @@ local function OnPlayerChange()
     end;
 end;
 
-Players.PlayerAdded:Connect(OnPlayerChange);
-Players.PlayerRemoving:Connect(OnPlayerChange);
+Library:GiveSignal(Players.PlayerAdded:Connect(OnPlayerChange));
+Library:GiveSignal(Players.PlayerRemoving:Connect(OnPlayerChange));
 
 getgenv().Library = Library
 return Library
