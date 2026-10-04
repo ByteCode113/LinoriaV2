@@ -161,7 +161,7 @@ function Library:CreateLabel(Properties, IsHud)
     return Library:Create(_Instance, Properties);
 end;
 
-function Library:MakeDraggable(Instance, Cutoff)
+function Library:MakeDraggable(Instance, Cutoff, smoothed)
     Instance.Active = true;
 
     Instance.InputBegan:Connect(function(Input)
@@ -174,7 +174,7 @@ function Library:MakeDraggable(Instance, Cutoff)
             if ObjPos.Y > (Cutoff or 40) then
                 return;
             end;
-            -- skeeded off of samet but ok
+
             while InputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do
                 local ScreenSize = Library.ScreenGui.AbsoluteSize;
                 local GuiSize = Instance.AbsoluteSize;
@@ -182,10 +182,20 @@ function Library:MakeDraggable(Instance, Cutoff)
                 local X = math.clamp(Mouse.X - ObjPos.X, 0, math.max(ScreenSize.X - GuiSize.X, 0));
                 local Y = math.clamp(Mouse.Y - ObjPos.Y, 0, math.max(ScreenSize.Y - GuiSize.Y, 0));
 
-                Instance.Position = UDim2.new(
+                local NewPosition = UDim2.new(
                     0, X + (GuiSize.X * Instance.AnchorPoint.X),
                     0, Y + (GuiSize.Y * Instance.AnchorPoint.Y)
                 );
+
+                if smoothed then
+                    TweenService:Create(
+                        Instance,
+                        TweenInfo.new(0.35, Enum.EasingStyle.Quart, Enum.EasingDirection.Out),
+                        { Position = NewPosition }
+                    ):Play();
+                else
+                    Instance.Position = NewPosition;
+                end;
 
                 RenderStepped:Wait();
             end;
@@ -2950,6 +2960,7 @@ function Library:CreateWindow(...)
     if type(Config.Title) ~= 'string' then Config.Title = 'No title' end
     if type(Config.TabPadding) ~= 'number' then Config.TabPadding = 0 end
     if type(Config.MenuFadeTime) ~= 'number' then Config.MenuFadeTime = 0.2 end
+    if type(Config.SmoothDragging) ~= 'boolean' then Config.SmoothDragging = false end
 
     if typeof(Config.Position) ~= 'UDim2' then Config.Position = UDim2.fromOffset(175, 50) end
     if typeof(Config.Size) ~= 'UDim2' then Config.Size = UDim2.fromOffset(550, 600) end
@@ -2974,7 +2985,7 @@ function Library:CreateWindow(...)
         Parent = ScreenGui;
     });
 
-    Library:MakeDraggable(Outer, 25);
+    Library:MakeDraggable(Outer, 25, Config.SmoothDragging);
 
     local Inner = Library:Create('Frame', {
         BackgroundColor3 = Library.MainColor;
