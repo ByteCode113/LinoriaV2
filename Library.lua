@@ -161,7 +161,7 @@ function Library:CreateLabel(Properties, IsHud)
     return Library:Create(_Instance, Properties);
 end;
 
-function Library:MakeDraggable(Instance, Cutoff, smoothed)
+function Library:MakeDraggable(Instance, Cutoff, smooth)
     Instance.Active = true;
 
     Instance.InputBegan:Connect(function(Input)
@@ -173,6 +173,11 @@ function Library:MakeDraggable(Instance, Cutoff, smoothed)
 
             if ObjPos.Y > (Cutoff or 40) then
                 return;
+            end;
+
+            local smooth2 = smooth;
+            if smooth2 == nil then
+                smooth2 = Library.SmoothDragging;
             end;
 
             while InputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do
@@ -187,7 +192,7 @@ function Library:MakeDraggable(Instance, Cutoff, smoothed)
                     0, Y + (GuiSize.Y * Instance.AnchorPoint.Y)
                 );
 
-                if smoothed then
+                if smooth2 then
                     TweenService:Create(
                         Instance,
                         TweenInfo.new(0.35, Enum.EasingStyle.Quart, Enum.EasingDirection.Out),
@@ -2961,6 +2966,7 @@ function Library:CreateWindow(...)
     if type(Config.TabPadding) ~= 'number' then Config.TabPadding = 0 end
     if type(Config.MenuFadeTime) ~= 'number' then Config.MenuFadeTime = 0.2 end
     if type(Config.SmoothDragging) ~= 'boolean' then Config.SmoothDragging = false end
+    Library.SmoothDragging = Config.SmoothDragging;
 
     if typeof(Config.Position) ~= 'UDim2' then Config.Position = UDim2.fromOffset(175, 50) end
     if typeof(Config.Size) ~= 'UDim2' then Config.Size = UDim2.fromOffset(550, 600) end
