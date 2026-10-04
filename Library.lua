@@ -175,10 +175,7 @@ function Library:MakeDraggable(Instance, Cutoff, smooth)
                 return;
             end;
 
-            local smooth2 = smooth;
-            if smooth2 == nil then
-                smooth2 = Library.SmoothDragging;
-            end;
+            local smooth2 = if smooth ~= nil then smooth else Library.SmoothDragging;
 
             while InputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do
                 local ScreenSize = Library.ScreenGui.AbsoluteSize;
