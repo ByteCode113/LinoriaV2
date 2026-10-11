@@ -2919,6 +2919,7 @@ function Library:Notify(Text, Time)
         TextXAlignment = Enum.TextXAlignment.Left;
         TextSize = 14;
         ZIndex = 103;
+        RichText = true;
         Parent = InnerFrame;
     });
 
