@@ -2856,10 +2856,11 @@ function Library:SetWatermark(Text)
 
     Library.WatermarkText.Text = Text;
 end;
-
+-- W claude cook for this fix mane
 function Library:Notify(Text, Time)
-    local XSize, YSize = Library:GetTextBounds(Text, Library.Font, 14);
-
+    local Plain = Text:gsub('<[^>]+>', '')
+    Plain = Plain:gsub('&lt;', '<'):gsub('&gt;', '>'):gsub('&quot;', '"'):gsub('&apos;', "'"):gsub('&amp;', '&')
+    local XSize, YSize = Library:GetTextBounds(Plain, Library.Font, 14);
     YSize = YSize + 7
 
     local NotifyOuter = Library:Create('Frame', {
