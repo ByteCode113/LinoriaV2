@@ -19,7 +19,7 @@ local Window = Library:CreateWindow({
     AutoShow = true,
     TabPadding = 4,
     MenuFadeTime = 0.2,
-    SmoothDragging = true
+    SmoothDragging = false -- true makes the library have an eased drsgging anim
 })
 
 -- CALLBACK NOTE:
